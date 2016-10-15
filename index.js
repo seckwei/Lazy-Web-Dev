@@ -42,14 +42,15 @@ const DEFAULT = {
 app.post('/data', (req, res) => {
     console.log('Data posted', req.body);
 
-    let {
-        action,
-        id = DEFAULT.ID, 
-        element = 'div', 
-        width = DEFAULT.WIDTH, 
-        height = DEFAULT.HEIGHT, 
-        bg = DEFAULT.BG
-    } = req.body;
+    let body = req.body;
+
+    let action = body.action || undefined,
+        id = body.id || DEFAULT.ID, 
+        element = body.element || 'div', 
+        width = body.width || DEFAULT.WIDTH, 
+        height = body.height || DEFAULT.HEIGHT, 
+        bg = body.bg || DEFAULT.BG;
+
     let message = {};
 
     console.log(action);
