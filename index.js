@@ -53,8 +53,8 @@ function processElement(data, DEFAULT){
         id : data.id || DEFAULT.ID,
         element : data.element || DEFAULT.ELEMENT,
         units : data.units || DEFAULT.UNITS,
-        width : data.width || DEFAULT.WIDTH,
-        height : data.height || (!isAutoHeightElem(data.element)? '100' : DEFAULT.HEIGHT),
+        width : (data.width || DEFAULT.WIDTH).toString(),
+        height : (data.height || (!isAutoHeightElem(data.element)? '100' : DEFAULT.HEIGHT)).toString(),
         bg : data.bg || DEFAULT.BG,
         content : data.content || DEFAULT.CONTENT
     }
