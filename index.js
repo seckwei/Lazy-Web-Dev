@@ -35,7 +35,7 @@ const DEFAULT = {
     ID: 'defaultID',
     WIDTH: 100,
     HEIGHT: 100,
-    BG: 'black'
+    BG: 'transparent'
 };
 
 // API - Receive POST data
@@ -82,7 +82,7 @@ app.post('/data', (req, res) => {
 
     console.log('Data sent to client');
     console.log(message);
-    
+
     res.send('OK');
 });
 
