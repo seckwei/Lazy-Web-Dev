@@ -53,7 +53,6 @@ app.post('/data', (req, res) => {
 
     let message = {};
 
-    console.log(action);
     switch(action){
         case 'create': {
             message = {
@@ -81,6 +80,9 @@ app.post('/data', (req, res) => {
     message.action = action;
     io.emit('message', message);
 
+    console.log('Data sent to client');
+    console.log(message);
+    
     res.send('OK');
 });
 
