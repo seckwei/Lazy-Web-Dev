@@ -33,10 +33,11 @@ app.get('/', (req, res) => {
 
 const DEFAULT = {
     ID: 'defaultID',
-    WIDTH: 100,
-    HEIGHT: 10,
+    WIDTH: '100',
+    HEIGHT: 'auto',
     BG: 'transparent',
-    CONTENT: ''
+    CONTENT: '',
+    UNITS: 'px'
 };
 
 // API - Receive POST data
@@ -48,10 +49,15 @@ app.post('/data', (req, res) => {
     let action = body.action || undefined,
         id = body.id || DEFAULT.ID, 
         element = body.element || 'div', 
+        units = body.units || DEFAULT.UNITS,
         width = body.width || DEFAULT.WIDTH, 
-        height = body.height || DEFAULT.HEIGHT, 
+        // If not p tag then default height is 100
+        height = body.height || ((element !== 'p')? '100' : DEFAULT.HEIGHT), 
         bg = body.bg || DEFAULT.BG,
         content = body.content || DEFAULT.CONTENT;
+
+    width.replace(/px|\%/gi, '');
+    height.replace(/px|\%/gi, '');
 
     let message = {};
 

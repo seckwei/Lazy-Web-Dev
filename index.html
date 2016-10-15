@@ -26,9 +26,9 @@
                         let element = $(`<${data.element}>`);
                             element.attr('id', (id));
                             element.css({
-                                'width': `${data.width}px`,
-                                'height': `${data.height}px`,
-                                'background-color': `${data.bg}`,
+                                'width': data.width,
+                                'height': data.height,
+                                'background-color': data.bg,
                                 'display': 'inline-block'
                             });
 
