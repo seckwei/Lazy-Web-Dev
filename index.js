@@ -40,6 +40,7 @@ const DEFAULT = {
 
 // API - Receive POST data
 app.post('/data', (req, res) => {
+    console.log(req);
     console.log('Data posted', req.body);
     let body = req.body;
 
