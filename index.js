@@ -5,7 +5,9 @@ const app = require('express')(),
 
 const PORT = process.env.PORT || '8080';
 
-server.listen(PORT);
+server.listen(PORT, () => {
+    console.log('Server listening on port ' + PORT);
+});
 
 app.use(bodyParser.json());
 
