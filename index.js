@@ -10,8 +10,13 @@ server.listen(PORT);
 app.use(bodyParser.json());
 
 // Home page
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
+});
+
+// Ignore favicon
+app.get('/favicon.ico', () => {
+    res.send(200);
 });
 
 // API - Receive POST data
