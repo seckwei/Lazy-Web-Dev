@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 // Ignore favicon
 app.get('/favicon.ico', (req, res) => {
-    res.send(200);
+    res.sendStatus(200);
 });
 
 // API - Receive POST data
