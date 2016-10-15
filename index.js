@@ -50,7 +50,7 @@ app.post('/data', (req, res) => {
         element = body.element || 'div', 
         width = body.width || DEFAULT.WIDTH, 
         height = body.height || DEFAULT.HEIGHT, 
-        bg = body.bg || DEFAULT.BG
+        bg = body.bg || DEFAULT.BG,
         content = body.content || DEFAULT.CONTENT;
 
     let message = {};
