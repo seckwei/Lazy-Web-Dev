@@ -70,27 +70,34 @@ var handlers = {
             //inputAction + " with a " + inputElement + " with "
             //+ slots.Amount.value + " " + inputChildElement;
         }else{
+            var height = slots.Height ? slots.Height.value : '';
+            var width = slots.Width ? slots.Width.value : '';
+            var ID = slots.ElemID ? slots.ElemID.value : '';
+            var bgColour = '';
+            var content = slots.Text ? slots.Text.value : '';
+            inputElement == 'div' ? bgColour = "yellow" : '';
+
             var ObjToSend = {
+                "action" : inputAction,
                 "element": inputElement,
-                "width": 500,
-                "height": 300,
-                "bg": "red",
-                "id": "testID"
+                "width": width,
+                "height": height,
+                "bg": bgColour,
+                "id": ID,
+                "content" : content
             }
         }
 
-        request.post(
-            'https://lazywebdev.herokuapp.com/data',
-            JSON.stringify(ObjToSend),
-            function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    console.log(body)
-                }
-            }
-        );
 
-
-        this.emit(':tellWithCard', "hello", SKILL_NAME,  "hello");
+        request({
+            url: 'https://lazywebdev.herokuapp.com/data',
+            method: 'POST',
+            body: ObjToSend,
+            json: true
+        }, (err, res, body) => {
+            console.log('Error', body);
+            this.emit(':tellWithCard', "hello");
+        });
     },
     'AMAZON.HelpIntent': function () {
         var speechOutput = "You can say tell me a space fact, or, you can say exit... What can I help you with?";
