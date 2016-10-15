@@ -15,6 +15,11 @@ server.listen(PORT, () => {
 
 app.use(bodyParser.json());
 
+// Ignore favicon
+app.get('/favicon.ico', (req, res) => {
+    res.sendStatus(200);
+});
+
 // Home page
 app.get('/', (req, res) => {
     res.set('Content-Type', 'text/html');
@@ -24,11 +29,6 @@ app.get('/', (req, res) => {
         }
         res.send(data);
     });
-});
-
-// Ignore favicon
-app.get('/favicon.ico', (req, res) => {
-    res.sendStatus(200);
 });
 
 const DEFAULT = {
