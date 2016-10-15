@@ -17,23 +17,41 @@
             console.log(url);
             let socket = io.connect(url);
 
+            function createElement(data){
+                let element = $(`<${data.element}>`);
+                element.attr('id', (data.id));
+                element.css({
+                    'width': data.width,
+                    'height': data.height,
+                    'background-color': data.bg,
+                    'display': 'inline-block'
+                });
+                return element;
+            }
+
             socket.on('message', (data) => {
                 console.log(data);
                 let id = data.id;
 
                 switch(data.action){
                     case 'create': {
-                        let element = $(`<${data.element}>`);
-                            element.attr('id', (id));
-                            element.css({
-                                'width': data.width,
-                                'height': data.height,
-                                'background-color': data.bg,
-                                'display': 'inline-block'
-                            });
+                        if(data.parent && data.children){
+                            let parent = createElement(data.parent),
+                                child;
+                            $('body').append(parent);
+                            parent.text(data.parent.content);
 
-                        $('body').append(element);             
-                        element.text(data.content);
+                            for(let i = 0; i < data.children.amount; i++){
+                                child = createElement(data.children.child);
+                                parent.append(child);
+                                child.text(data.children.child.content);
+                            }
+                        }
+                        else {
+                            let element = createElement(data);
+                            $('body').append(element);     
+                            element.text(data.content);
+                        }
                         break;
                     }
                     case 'edit': {

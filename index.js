@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
 
 const DEFAULT = {
     ID: 'defaultID',
+    ELEMENT: 'div',
     WIDTH: '100',
     HEIGHT: 'auto',
     BG: 'transparent',
@@ -40,48 +41,59 @@ const DEFAULT = {
     UNITS: 'px'
 };
 
+const autoHeightElem = ['p','ol','ul','li'];
+function isAutoHeightElem(elem){
+    return autoHeightElem.some((item)=>{
+        return elem === item;
+    });
+}
+
+function processElement(data, DEFAULT){
+    let element = {
+        id : data.id || DEFAULT.ID,
+        element : data.element || DEFAULT.ELEMENT,
+        units : data.units || DEFAULT.UNITS,
+        width : data.width || DEFAULT.WIDTH,
+        height : data.height || (!isAutoHeightElem(data.element)? '100' : DEFAULT.HEIGHT),
+        bg : data.bg || DEFAULT.BG,
+        content : data.content || DEFAULT.CONTENT
+    }
+    element.width = element.width.replace(/auto(px|\%)/gi, 'auto');
+    element.height = element.height.replace(/auto(px|\%)/gi, 'auto');
+
+    return element;
+}
+
 // API - Receive POST data
 app.post('/data', (req, res) => {
     console.log('Data posted', req.body);
 
-    let body = req.body;
-
-    let action = body.action || undefined,
-        id = body.id || DEFAULT.ID, 
-        element = body.element || 'div', 
-        units = body.units || DEFAULT.UNITS,
-        width = body.width || DEFAULT.WIDTH, 
-        // If not p tag then default height is 100
-        height = body.height || ((element !== 'p')? '100' : DEFAULT.HEIGHT), 
-        bg = body.bg || DEFAULT.BG,
-        content = body.content || DEFAULT.CONTENT;
-
-    width.replace(/px|\%/gi, '');
-    height.replace(/px|\%/gi, '');
-
-    let message = {};
+    let body = req.body,
+        action = body.action || undefined,
+        message = {};
 
     switch(action){
         case 'create': {
-            message = {
-                id: id,
-                element: element,
-                width: width,
-                height: height,
-                bg: bg,
-                content: content
-            };
+            if(body.parent && body.children){
+                message.parent = processElement(body.parent, DEFAULT);
+                message.children = {};
+                message.children.child = processElement(body.children.child, DEFAULT);
+                message.children.amount = body.children.amount;
+            }
+            else {
+                message = processElement(data, DEFAULT);
+            }
             break;
         }
         case 'edit': {
             message = {
-                id: id
+                id: body.id
             };
             break;
         }
         case 'delete': {
             message = {
-                id: id
+                id: body.id
             };
             break;
         }
