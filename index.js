@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 const DEFAULT = {
     ID: 'defaultID',
     WIDTH: 100,
-    HEIGHT: 100,
+    HEIGHT: 10,
     BG: 'transparent',
     CONTENT: ''
 };
