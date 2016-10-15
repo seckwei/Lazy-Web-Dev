@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 // Ignore favicon
-app.get('/favicon.ico', (req, rex) => {
+app.get('/favicon.ico', (req, res) => {
     res.send(200);
 });
 
