@@ -1,12 +1,12 @@
 <html>
     <head>
         <title>Lazy Web Devs</title>
-        <script   src="http://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             let host = window.location.host,
                 port = window.location.port;
-                url = `http://${host}`;
+                url = `https://${host}`;
 
             console.log(url);
             let socket = io.connect(url);

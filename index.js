@@ -5,7 +5,8 @@ const app = require('express')(),
     io = require('socket.io')(server),
     bodyParser = require('body-parser');
 
-const PORT = process.env.PORT || '8080';
+const PORT = process.env.PORT || '8080',
+    ENV = (process.env.NODE_ENV)? 'prod' : 'dev';
 
 server.listen(PORT, () => {
     console.log('Server listening on port ' + PORT);
