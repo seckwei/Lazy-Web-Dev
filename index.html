@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Lazy Web Devs</title>
+        <script   src="http://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            let host = window.location.host,
+                port = window.location.port;
+                url = `http://${host}`;
+
+            console.log(url);
+            let socket = io.connect(url);
+
+            const DEFAULT = {
+                ID: 'defaultID',
+                WIDTH: 100,
+                HEIGHT: 100,
+                BG: 'black'
+            };
+
+            socket.on('create', function (data) {
+                console.log(data);
+
+                let element = $(`<${data.element}>`);
+                    element.attr('id', (data.id || DEFAULT.ID));
+                    element.css({
+                        'width': `${data.width || DEFAULT.WIDTH}px`,
+                        'height': `${data.height || DEFAULT.HEIGHT}px`,
+                        'background-color': `${data.bg || DEFAULT.BG}`
+                    });
+
+                $('body').append(element);             
+            });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
