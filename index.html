@@ -4,29 +4,23 @@
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            let host = window.location.host,
-                port = window.location.port;
-                url = `https://${host}`;
+            'use strict';
+            let protocol = 'https',
+                host = window.location.host,
+                url = `${protocol}://${host}`;
 
             console.log(url);
             let socket = io.connect(url);
-
-            const DEFAULT = {
-                ID: 'defaultID',
-                WIDTH: 100,
-                HEIGHT: 100,
-                BG: 'black'
-            };
 
             socket.on('create', function (data) {
                 console.log(data);
 
                 let element = $(`<${data.element}>`);
-                    element.attr('id', (data.id || DEFAULT.ID));
+                    element.attr('id', (data.id));
                     element.css({
-                        'width': `${data.width || DEFAULT.WIDTH}px`,
-                        'height': `${data.height || DEFAULT.HEIGHT}px`,
-                        'background-color': `${data.bg || DEFAULT.BG}`
+                        'width': `${data.width}px`,
+                        'height': `${data.height}px`,
+                        'background-color': `${data.bg}`
                     });
 
                 $('body').append(element);             
