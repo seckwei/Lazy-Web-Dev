@@ -1,6 +1,11 @@
 <html>
     <head>
         <title>Lazy Web Devs</title>
+        <style>
+            * {
+                font-family: 'sans-serif';
+            }
+        </style>
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -26,6 +31,7 @@
                                 'background-color': `${data.bg}`,
                                 'display': 'inline-block'
                             });
+                            element.text(data.content);
 
                         $('body').append(element);             
                         break;

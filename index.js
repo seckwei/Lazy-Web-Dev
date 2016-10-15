@@ -35,7 +35,8 @@ const DEFAULT = {
     ID: 'defaultID',
     WIDTH: 100,
     HEIGHT: 100,
-    BG: 'transparent'
+    BG: 'transparent',
+    CONTENT: ''
 };
 
 // API - Receive POST data
@@ -49,7 +50,8 @@ app.post('/data', (req, res) => {
         element = body.element || 'div', 
         width = body.width || DEFAULT.WIDTH, 
         height = body.height || DEFAULT.HEIGHT, 
-        bg = body.bg || DEFAULT.BG;
+        bg = body.bg || DEFAULT.BG
+        content = body.content || DEFAULT.CONTENT;
 
     let message = {};
 
@@ -60,7 +62,8 @@ app.post('/data', (req, res) => {
                 element: element,
                 width: width,
                 height: height,
-                bg: bg
+                bg: bg,
+                content: content
             };
             break;
         }
