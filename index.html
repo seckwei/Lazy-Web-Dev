@@ -12,18 +12,32 @@
             console.log(url);
             let socket = io.connect(url);
 
-            socket.on('create', function (data) {
+            socket.on('message', (data) => {
                 console.log(data);
+                let id = data.id;
 
-                let element = $(`<${data.element}>`);
-                    element.attr('id', (data.id));
-                    element.css({
-                        'width': `${data.width}px`,
-                        'height': `${data.height}px`,
-                        'background-color': `${data.bg}`
-                    });
+                switch(data.action){
+                    case 'create': {
+                        let element = $(`<${data.element}>`);
+                            element.attr('id', (id));
+                            element.css({
+                                'width': `${data.width}px`,
+                                'height': `${data.height}px`,
+                                'background-color': `${data.bg}`
+                            });
 
-                $('body').append(element);             
+                        $('body').append(element);             
+                        break;
+                    }
+                    case 'edit': {
+                        let element = $(`#${id}`);
+                        break;
+                    }
+                    case 'delete': {
+                        $(`#${id}`).remove();
+                        break;
+                    }
+                }
             });
         </script>
     </head>

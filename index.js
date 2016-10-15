@@ -40,17 +40,45 @@ const DEFAULT = {
 
 // API - Receive POST data
 app.post('/data', (req, res) => {
-    console.log(req);
     console.log('Data posted', req.body);
-    let body = req.body;
 
-    io.emit('create', {
-        element: body.element || 'div',
-        width: body.width || DEFAULT.WIDTH,
-        height: body.height || DEFAULT.HEIGHT,
-        bg: body.bg || DEFAULT.BG,
-        id: body.id || DEFAULT.ID
-    });
+    let {
+        action,
+        id = DEFAULT.ID, 
+        element = 'div', 
+        width = DEFAULT.WIDTH, 
+        height = DEFAULT.HEIGHT, 
+        bg = DEFAULT.BG
+    } = req.body;
+    let message = {};
+
+    console.log(action);
+    switch(action){
+        case 'create': {
+            message = {
+                id: id,
+                element: element,
+                width: width,
+                height: height,
+                bg: bg
+            };
+            break;
+        }
+        case 'edit': {
+            message = {
+                id: id
+            };
+            break;
+        }
+        case 'delete': {
+            message = {
+                id: id
+            };
+            break;
+        }
+    }
+    message.action = action;
+    io.emit('message', message);
 
     res.send('OK');
 });
