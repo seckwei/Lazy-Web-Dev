@@ -4,7 +4,8 @@ const app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server),
     bodyParser = require('body-parser'),
-    fs = require('fs');
+    fs = require('fs'),
+    randomWord = require('random-words');
 
 const PORT = process.env.PORT || '8080',
     ENV = (process.env.NODE_ENV)? 'prod' : 'dev';
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
     });
 });
 
+
 const DEFAULT = {
     ID: 'defaultID',
     ELEMENT: 'div',
@@ -50,7 +52,7 @@ function isAutoElem(elem){
 
 function processElement(data, DEFAULT){
     let element = {
-        id : data.id || DEFAULT.ID,
+        id : data.id || randomWord(),
         element : data.element || DEFAULT.ELEMENT,
         units : data.units || DEFAULT.UNITS,
         width : (data.width || (!isAutoElem(data.element)? '100' : DEFAULT.WIDTH)).toString(),
@@ -78,7 +80,7 @@ app.post('/data', (req, res) => {
                 message.parent = processElement(body.parent, DEFAULT);
                 message.children = {};
                 message.children.child = processElement(body.children.child, DEFAULT);
-                message.children.amount = body.children.amount;
+                message.children.ID = randomWord(body.children.amount);
             }
             else {
                 message = processElement(body, DEFAULT);

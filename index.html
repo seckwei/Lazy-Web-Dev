@@ -47,7 +47,46 @@
                 });
                 return element;
             }
+            
+            function getChildIDs(parent){
+                /*
+                    [
+                        {id : 123},
+                        {
+                            id : 234,
+                            children : [
+                                {id : 111},
+                                {id : 222}
+                            ]
+                        }
+                    ]               
+                */
+                return $.map($(parent).children(), (elem) => {
+                    let item = { id: elem.getAttribute('id') };
+                    if($(elem).children().length){
+                        item.children = getChildIDs(elem);
+                    }
+                    return item;
+                });
+            }
 
+            function generateIDList(arr){
+                let ul = $('<ul>'),
+                    li = () => $('<li>');
+
+                let listItem;
+                arr.forEach((item) => {
+                    listItem = li();
+                    listItem.text(item.id);
+                    if(item.children){
+                        listItem.append(generateIDList(item.children));
+                    }
+                    ul.append(listItem);
+                });
+                return ul;
+            }
+
+            // Selector of the Destination container that will have all the added elements
             const DEST = '.content';
 
             socket.on('message', (data) => {
@@ -61,11 +100,12 @@
                             $(DEST).append(parent);
                             //parent.text(data.parent.content || new Date().getTime());
 
-                            for(let i = 0; i < data.children.amount; i++){
+                            data.children.ID.forEach((id) => {
                                 child = createElement(data.children.child);
+                                child.attr('id', id);
                                 parent.append(child);
                                 child.text(data.children.child.content || new Date().getTime());
-                            }
+                            });
                         }
                         else {
                             let element = createElement(data);
@@ -88,15 +128,10 @@
                     }
                 }
                 
-                let arrID = $.map($(DEST).children(), (elem) => {
-                    return elem.getAttribute('id');
-                });
+                let arrID = getChildIDs('.content');
+
                 $('.sidebar').empty();
-                let list = $('<ul>');
-                arrID.forEach((id) => {
-                    list.append($(`<li>${id}</li>`));
-                });
-                $('.sidebar').append(list);
+                $('.sidebar').append(generateIDList(arrID));
             });
         </script>
     </head>
