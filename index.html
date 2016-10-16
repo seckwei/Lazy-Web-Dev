@@ -118,7 +118,8 @@
                         let element = $(`#${data.id}`);
                         element.css({
                             'height': data.height || element.height(),
-                            'width': data.width || element.width()
+                            'width': data.width || element.width(),
+                            'background-color': data.bg || element.css('background-color')
                         });
                         break;
                     }

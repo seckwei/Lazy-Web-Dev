@@ -91,7 +91,8 @@ app.post('/data', (req, res) => {
             message = {
                 id: body.id,
                 height: body.height || null,
-                width: body.width || null
+                width: body.width || null,
+                bg: body.bg || null
             };
             break;
         }
