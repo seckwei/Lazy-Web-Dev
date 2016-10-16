@@ -2,17 +2,22 @@
 var Alexa = require('alexa-sdk');
 var request = require('request');
 
-
 var APP_ID = undefined; //OPTIONAL: replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-var SKILL_NAME = 'Space Facts';
+var SKILL_NAME = 'Lazy Web Dev';
 
 var output = [
-    'Looking good!',
-    "personally, i'd change that'",
-    'what do you think?',
-    'have you heard of css, I think you should look in to it.']
+    "Looking good!",
+    "Personally, I'd change that'",
+    "What do you think?",
+    "Have you heard of CSS? I think you should look in to it.",
+    "Nice Job!",
+    "I don't think you wanted to do that, did you?",
+    "Oooh Fancy",
+    "Now that's semantic!",
+    "You're a beginner at this aren't you?"
+]
 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID;
     alexa.registerHandlers(handlers);
@@ -27,32 +32,34 @@ var handlers = {
         this.emit('GetAction');
     },
     'GetAction': function () {
-        // Get a random space fact from the space facts list
+
         var slots = {};
         var inputAction = '';
         var inputElement = '';
         var inputChildElement = '';
-        if(this.event.request.intent){
+        if (this.event.request.intent) {
             slots = this.event.request.intent.slots;
             inputAction = slots.Action.value;
-            switch(inputAction){
+            switch (inputAction) {
                 case 'create':
                     inputElement = element(slots.Element.value);
-                    if(slots.ChildElement.value){
+                    if (slots.ChildElement.value) {
                         inputChildElement = element(slots.ChildElement.value);
                     }
 
-                    if (inputChildElement != '' && slots.Amount.value){
+                    if (inputChildElement != '' && slots.Amount.value) {
                         var ObjToSend = {
-                            "action" : inputAction,
-                            "parent" : { "element": inputElement,
-                            "width": "auto",
-                            "height": "auto",
-                            "bg": "red",
-                            "id": "testID" },
-                            "children" : {
-                                "amount" : slots.Amount.value,
-                                "child" : {
+                            "action": inputAction,
+                            "parent": {
+                                "element": inputElement,
+                                "width": "auto",
+                                "height": "auto",
+                                "bg": "red",
+                                "id": "testID"
+                            },
+                            "children": {
+                                "amount": slots.Amount.value,
+                                "child": {
                                     "element": inputChildElement,
                                     "width": "auto",
                                     "height": "auto",
@@ -70,28 +77,27 @@ var handlers = {
                         inputElement == 'div' ? bgColour = "yellow" : '';
 
                         var ObjToSend = {
-                            "action" : inputAction,
+                            "action": inputAction,
                             "element": inputElement,
                             "width": width,
                             "height": height,
                             "bg": bgColour,
                             "id": ID,
-                            "content" : content
+                            "content": content
                         }
                     }
                     break;
                 case 'delete':
                     var ObjToSend = {
-                        "action" : inputAction,
-                        "id" : slots.ElemID ? slots.ElemID.value : ''
-                        }
+                        "action": inputAction,
+                        "id": slots.ElemID ? slots.ElemID.value : ''
+                    }
                     break;
                 case 'edit':
                     break;
                 default:
             }
-        }
-        else {
+        } else {
             inputAction = "App launched";
         }
 
@@ -107,7 +113,7 @@ var handlers = {
         });
     },
     'AMAZON.HelpIntent': function () {
-        var speechOutput = "You can say tell me a space fact, or, you can say exit... What can I help you with?";
+        var speechOutput = "You can say things like create a list with five list items, or, you can say exit... What can I help you with?";
         var reprompt = "What can I help you with?";
         this.emit(':ask', speechOutput, reprompt);
     },
@@ -119,7 +125,7 @@ var handlers = {
     }
 };
 
-var element = function(element){
+var element = function (element) {
     switch (element) {
         case 'div':
         case 'divs':
