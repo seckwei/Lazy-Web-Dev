@@ -15,7 +15,7 @@ var output = [
     "Oooh Fancy",
     "Now that's semantic!",
     "You're a beginner at this aren't you?"
-]
+];
 
 exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -37,68 +37,87 @@ var handlers = {
         var inputAction = '';
         var inputElement = '';
         var inputChildElement = '';
+        var ObjToSend = {};
+        console.log("before");
         if (this.event.request.intent) {
             slots = this.event.request.intent.slots;
             inputAction = slots.Action.value;
+            console.log("switch " + inputAction);
             switch (inputAction) {
+
                 case 'create':
+                    console.log('create');
                     inputElement = element(slots.Element.value);
                     if (slots.ChildElement.value) {
                         inputChildElement = element(slots.ChildElement.value);
                     }
 
                     if (inputChildElement != '' && slots.Amount.value) {
-                        var ObjToSend = {
+                        ObjToSend = {
                             "action": inputAction,
                             "parent": {
                                 "element": inputElement,
                                 "width": "auto",
-                                "height": "auto",
-                                "bg": "red",
-                                "id": "testID"
+                                "height": "auto"
                             },
                             "children": {
                                 "amount": slots.Amount.value,
                                 "child": {
                                     "element": inputChildElement,
                                     "width": "auto",
-                                    "height": "auto",
-                                    "bg": "red",
-                                    "id": "testID"
+                                    "height": "auto"
                                 }
                             }
-                        }
+                        };
                     } else {
                         var height = slots.Height ? slots.Height.value : '';
                         var width = slots.Width ? slots.Width.value : '';
                         var ID = slots.ElemID ? slots.ElemID.value : '';
-                        var bgColour = '';
+                        var bgColour = slots.Colour ? slots.Colour.value : '';
                         var content = slots.Text ? slots.Text.value : '';
-                        inputElement == 'div' ? bgColour = "yellow" : '';
 
-                        var ObjToSend = {
+                        ObjToSend = {
                             "action": inputAction,
                             "element": inputElement,
                             "width": width,
                             "height": height,
-                            "bg": bgColour,
                             "id": ID,
+                            "bg": bgColour,
                             "content": content
-                        }
+                        };
                     }
                     break;
                 case 'delete':
-                    var ObjToSend = {
+                    console.log('delete');
+                    ObjToSend = {
                         "action": inputAction,
                         "id": slots.ElemID ? slots.ElemID.value : ''
-                    }
-                    break;
-                case 'edit':
+                    };
                     break;
                 default:
+                    console.log('edit');
+                    var height = slots.Height ? slots.Height.value : '';
+                    var width = slots.Width ? slots.Width.value : '';
+                    var ID = slots.ElemID ? slots.ElemID.value : '';
+                    var bgColour = slots.Colour ? slots.Colour.value : '';
+                    var content = slots.Text ? slots.Text.value : '';
+
+                    ObjToSend = {
+                        "action": inputAction,
+                        "element": inputElement,
+                        "width": width,
+                        "height": height,
+                        "bg": bgColour,
+                        "id": ID,
+                        "bg": bgColour,
+                        "content": content
+                    };
+                    console.log('edit '+ ObjToSend);
+                    break;
             }
         } else {
             inputAction = "App launched";
+            console.log("else");
         }
 
         request({
@@ -107,7 +126,7 @@ var handlers = {
             body: ObjToSend,
             json: true
         }, (err, res, body) => {
-            console.log('Error', body);
+            console.log('Error:', body);
             var pharse = Math.floor((Math.random() * output.length))
             this.emit(':tellWithCard', output[pharse]);
         });
