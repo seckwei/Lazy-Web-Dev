@@ -34,16 +34,16 @@ app.get('/', (req, res) => {
 const DEFAULT = {
     ID: 'defaultID',
     ELEMENT: 'div',
-    WIDTH: '100',
+    WIDTH: 'auto',
     HEIGHT: 'auto',
     BG: 'transparent',
     CONTENT: '',
     UNITS: 'px'
 };
 
-const autoHeightElem = ['p','ol','ul','li'];
-function isAutoHeightElem(elem){
-    return autoHeightElem.some((item)=>{
+const autoElem = ['p','ol','ul','li'];
+function isAutoElem(elem){
+    return autoElem.some((item)=>{
         return elem === item;
     });
 }
@@ -53,8 +53,8 @@ function processElement(data, DEFAULT){
         id : data.id || DEFAULT.ID,
         element : data.element || DEFAULT.ELEMENT,
         units : data.units || DEFAULT.UNITS,
-        width : (data.width || DEFAULT.WIDTH).toString(),
-        height : (data.height || (!isAutoHeightElem(data.element)? '100' : DEFAULT.HEIGHT)).toString(),
+        width : (data.width || (!isAutoElem(data.element)? '100' : DEFAULT.WIDTH)).toString(),
+        height : (data.height || (!isAutoElem(data.element)? '100' : DEFAULT.HEIGHT)).toString(),
         bg : data.bg || DEFAULT.BG,
         content : data.content || DEFAULT.CONTENT
     }

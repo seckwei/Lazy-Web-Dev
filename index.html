@@ -38,12 +38,12 @@
                             let parent = createElement(data.parent),
                                 child;
                             $('body').append(parent);
-                            parent.text(data.parent.content);
+                            parent.text(data.parent.content || new Date().getTime());
 
                             for(let i = 0; i < data.children.amount; i++){
                                 child = createElement(data.children.child);
                                 parent.append(child);
-                                child.text(data.children.child.content);
+                                child.text(data.children.child.content || new Date().getTime());
                             }
                         }
                         else {
