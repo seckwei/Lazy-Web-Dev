@@ -51,7 +51,7 @@
                 return element;
             }
             
-            function getChildIDs(parent){
+            function getChildSelectors(parent){
                 /*
                     [
                         {id : 123},
@@ -65,24 +65,24 @@
                     ]               
                 */
                 return $.map($(parent).children(), (elem) => {
-                    let item = { id: elem.getAttribute('id') };
+                    let item = { selector: (elem.getAttribute('id') || elem.getAttribute('class')) };
                     if($(elem).children().length){
-                        item.children = getChildIDs(elem);
+                        item.children = getChildSelectors(elem);
                     }
                     return item;
                 });
             }
 
-            function generateIDList(arr){
+            function generateSelectorList(arr){
                 let ul = $('<ul>'),
                     li = () => $('<li>');
 
                 let listItem;
                 arr.forEach((item) => {
                     listItem = li();
-                    listItem.text(item.id);
+                    listItem.text(item.selector);
                     if(item.children){
-                        listItem.append(generateIDList(item.children));
+                        listItem.append(generateSelectorList(item.children));
                     }
                     ul.append(listItem);
                 });
@@ -136,10 +136,10 @@
                     }
                 }
                 
-                let arrID = getChildIDs('.content');
+                let arrID = getChildSelectors('.content');
 
                 $('.sidebar').empty();
-                $('.sidebar').append(generateIDList(arrID));
+                $('.sidebar').append(generateSelectorList(arrID));
             });
         </script>
     </head>

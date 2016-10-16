@@ -107,7 +107,7 @@ app.post('/data', (req, res) => {
             break;
         }
         case 'bootstrap': {
-            message = body;
+            message.component = body.component;
             break;
         }
     }
