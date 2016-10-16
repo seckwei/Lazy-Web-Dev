@@ -2,12 +2,22 @@
 var Alexa = require('alexa-sdk');
 var request = require('request');
 
-
 var APP_ID = undefined; //OPTIONAL: replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-var SKILL_NAME = 'Space Facts';
+var SKILL_NAME = 'Lazy Web Dev';
 
+var output = [
+    "Looking good!",
+    "Personally, I'd change that'",
+    "What do you think?",
+    "Have you heard of CSS? I think you should look in to it.",
+    "Nice Job!",
+    "I don't think you wanted to do that, did you?",
+    "Oooh Fancy",
+    "Now that's semantic!",
+    "You're a beginner at this aren't you?"
+]
 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID;
     alexa.registerHandlers(handlers);
@@ -22,78 +32,88 @@ var handlers = {
         this.emit('GetAction');
     },
     'GetAction': function () {
-        // Get a random space fact from the space facts list
+
         var slots = {};
         var inputAction = '';
         var inputElement = '';
         var inputChildElement = '';
-        if(this.event.request.intent){
+        if (this.event.request.intent) {
             slots = this.event.request.intent.slots;
             inputAction = slots.Action.value;
-            switch(inputAction){
+            switch (inputAction) {
                 case 'create':
                     inputElement = element(slots.Element.value);
-                    if(slots.ChildElement.value){
+                    if (slots.ChildElement.value) {
                         inputChildElement = element(slots.ChildElement.value);
+                    }
+
+                    if (inputChildElement != '' && slots.Amount.value) {
+                        var ObjToSend = {
+                            "action": inputAction,
+                            "parent": {
+                                "element": inputElement,
+                                "width": "auto",
+                                "height": "auto",
+                                "bg": "red",
+                                "id": "testID"
+                            },
+                            "children": {
+                                "amount": slots.Amount.value,
+                                "child": {
+                                    "element": inputChildElement,
+                                    "width": "auto",
+                                    "height": "auto",
+                                    "bg": "red",
+                                    "id": "testID"
+                                }
+                            }
+                        }
+                    } else {
+                        var height = slots.Height ? slots.Height.value : '';
+                        var width = slots.Width ? slots.Width.value : '';
+                        var ID = slots.ElemID ? slots.ElemID.value : '';
+                        var bgColour = '';
+                        var content = slots.Text ? slots.Text.value : '';
+                        inputElement == 'div' ? bgColour = "yellow" : '';
+
+                        var ObjToSend = {
+                            "action": inputAction,
+                            "element": inputElement,
+                            "width": width,
+                            "height": height,
+                            "bg": bgColour,
+                            "id": ID,
+                            "content": content
+                        }
                     }
                     break;
                 case 'delete':
+                    var ObjToSend = {
+                        "action": inputAction,
+                        "id": slots.ElemID ? slots.ElemID.value : ''
+                    }
                     break;
                 case 'edit':
                     break;
                 default:
             }
-        }
-        else {
+        } else {
             inputAction = "App launched";
         }
 
-        // Create speech output
-        if (inputChildElement != '' && slots.Amount.value){
-            var ObjToSend = {
-                "parent" : { "element": inputElement,
-                "width": 500,
-                "height": 300,
-                "bg": "red",
-                "id": "testID" },
-                "Child" : {
-                    "Amount" : slots.Amount.value,
-                    "element" : {
-                        "element": inputChildElement,
-                        "width": 500,
-                        "height": 300,
-                        "bg": "red",
-                        "id": "testID"
-                    }
-                }
-            }
-            //inputAction + " with a " + inputElement + " with "
-            //+ slots.Amount.value + " " + inputChildElement;
-        }else{
-            var ObjToSend = {
-                "element": inputElement,
-                "width": 500,
-                "height": 300,
-                "bg": "red",
-                "id": "testID"
-            }
-        }
-
-        request.post(
-            'https://lazywebdev.herokuapp.com/data',
-            JSON.stringify(ObjToSend),
-            function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    console.log(body)
-                }
-            }
-        );
-
-
-        this.emit(':tellWithCard', "hello", SKILL_NAME,  "hello");
+        request({
+            url: 'https://lazywebdev.herokuapp.com/data',
+            method: 'POST',
+            body: ObjToSend,
+            json: true
+        }, (err, res, body) => {
+            console.log('Error', body);
+            var pharse = Math.floor((Math.random() * output.length))
+            this.emit(':tellWithCard', output[pharse]);
+        });
     },
     'AMAZON.HelpIntent': function () {
-        var speechOutput = "You can say tell me a space fact, or, you can say exit... What can I help you with?";
+        var speechOutput = "You can say things like create a list with five list items, or, you can say exit... What can I help you with?";
         var reprompt = "What can I help you with?";
         this.emit(':ask', speechOutput, reprompt);
     },
@@ -105,7 +125,7 @@ var handlers = {
     }
 };
 
-var element = function(element){
+var element = function (element) {
     switch (element) {
         case 'div':
         case 'divs':
