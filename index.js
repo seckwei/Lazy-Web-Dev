@@ -87,7 +87,9 @@ app.post('/data', (req, res) => {
         }
         case 'edit': {
             message = {
-                id: body.id
+                id: body.id,
+                height: body.height || null,
+                width: body.width || null
             };
             break;
         }

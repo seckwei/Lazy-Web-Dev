@@ -30,7 +30,6 @@
 
             socket.on('message', (data) => {
                 console.log(data);
-                let id = data.id;
 
                 switch(data.action){
                     case 'create': {
@@ -54,11 +53,15 @@
                         break;
                     }
                     case 'edit': {
-                        let element = $(`#${id}`);
+                        let element = $(`#${data.id}`);
+                        element.css({
+                            'height': data.height || element.height(),
+                            'width': data.width || element.width()
+                        });
                         break;
                     }
                     case 'delete': {
-                        $(`#${id}`).remove();
+                        $(`#${data.id}`).remove();
                         break;
                     }
                 }
