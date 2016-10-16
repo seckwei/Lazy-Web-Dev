@@ -1,35 +1,67 @@
 <html>
     <head>
         <title>Lazy Web Devs</title>
+        <style>
+            * {
+                font-family: sans-serif;
+            }
+        </style>
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            let host = window.location.host,
-                port = window.location.port;
-                url = `https://${host}`;
+            'use strict';
+            let protocol = 'https',
+                host = window.location.host,
+                url = `${protocol}://${host}`;
 
             console.log(url);
             let socket = io.connect(url);
 
-            const DEFAULT = {
-                ID: 'defaultID',
-                WIDTH: 100,
-                HEIGHT: 100,
-                BG: 'black'
-            };
-
-            socket.on('create', function (data) {
-                console.log(data);
-
+            function createElement(data){
                 let element = $(`<${data.element}>`);
-                    element.attr('id', (data.id || DEFAULT.ID));
-                    element.css({
-                        'width': `${data.width || DEFAULT.WIDTH}px`,
-                        'height': `${data.height || DEFAULT.HEIGHT}px`,
-                        'background-color': `${data.bg || DEFAULT.BG}`
-                    });
+                element.attr('id', (data.id));
+                element.css({
+                    'width': data.width,
+                    'height': data.height,
+                    'background-color': data.bg
+                });
+                return element;
+            }
 
-                $('body').append(element);             
+            socket.on('message', (data) => {
+                console.log(data);
+                let id = data.id;
+
+                switch(data.action){
+                    case 'create': {
+                        if(data.parent && data.children){
+                            let parent = createElement(data.parent),
+                                child;
+                            $('body').append(parent);
+                            //parent.text(data.parent.content || new Date().getTime());
+
+                            for(let i = 0; i < data.children.amount; i++){
+                                child = createElement(data.children.child);
+                                parent.append(child);
+                                child.text(data.children.child.content || new Date().getTime());
+                            }
+                        }
+                        else {
+                            let element = createElement(data);
+                            $('body').append(element);     
+                            element.text(data.content);
+                        }
+                        break;
+                    }
+                    case 'edit': {
+                        let element = $(`#${id}`);
+                        break;
+                    }
+                    case 'delete': {
+                        $(`#${id}`).remove();
+                        break;
+                    }
+                }
             });
         </script>
     </head>
