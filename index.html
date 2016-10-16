@@ -118,7 +118,7 @@
                                 child = createElement(data.children.child);
                                 child.attr('id', id);
                                 parent.append(child);
-                                child.text(data.children.child.content || new Date().getTime());
+                                child.text(data.children.child.content || id);
                             });
                         }
                         else {
