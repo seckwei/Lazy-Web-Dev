@@ -15,7 +15,7 @@ const SNIPPET = {
                     </ul>
                 </div>
                 </nav>`,
-    banner : `<div class="container">
+    heading : `<div class="container">
                     <div class="jumbotron">
                         <h1>Wow Factor</h1> 
                         <p>Lorem ipsum something something text, I forgot what it is and
