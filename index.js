@@ -81,7 +81,7 @@ app.post('/data', (req, res) => {
                 message.children.amount = body.children.amount;
             }
             else {
-                message = processElement(data, DEFAULT);
+                message = processElement(body, DEFAULT);
             }
             break;
         }
