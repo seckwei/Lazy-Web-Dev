@@ -43,7 +43,7 @@ const DEFAULT = {
     UNITS: 'px'
 };
 
-const autoElem = ['p','ol','ul','li'];
+const autoElem = ['p', 'ol', 'ul', 'li', 'h1', 'img'];
 function isAutoElem(elem){
     return autoElem.some((item)=>{
         return elem === item;
