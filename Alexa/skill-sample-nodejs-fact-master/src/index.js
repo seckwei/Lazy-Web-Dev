@@ -6,6 +6,11 @@ var request = require('request');
 var APP_ID = undefined; //OPTIONAL: replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
 var SKILL_NAME = 'Space Facts';
 
+var output = [
+    'Looking good!',
+    "personally, i'd change that'",
+    'what do you think?',
+    'have you heard of css, I think you should look in to it.']
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -36,8 +41,50 @@ var handlers = {
                     if(slots.ChildElement.value){
                         inputChildElement = element(slots.ChildElement.value);
                     }
+
+                    if (inputChildElement != '' && slots.Amount.value){
+                        var ObjToSend = {
+                            "action" : inputAction,
+                            "parent" : { "element": inputElement,
+                            "width": "auto",
+                            "height": "auto",
+                            "bg": "red",
+                            "id": "testID" },
+                            "children" : {
+                                "amount" : slots.Amount.value,
+                                "child" : {
+                                    "element": inputChildElement,
+                                    "width": "auto",
+                                    "height": "auto",
+                                    "bg": "red",
+                                    "id": "testID"
+                                }
+                            }
+                        }
+                    } else {
+                        var height = slots.Height ? slots.Height.value : '';
+                        var width = slots.Width ? slots.Width.value : '';
+                        var ID = slots.ElemID ? slots.ElemID.value : '';
+                        var bgColour = '';
+                        var content = slots.Text ? slots.Text.value : '';
+                        inputElement == 'div' ? bgColour = "yellow" : '';
+
+                        var ObjToSend = {
+                            "action" : inputAction,
+                            "element": inputElement,
+                            "width": width,
+                            "height": height,
+                            "bg": bgColour,
+                            "id": ID,
+                            "content" : content
+                        }
+                    }
                     break;
                 case 'delete':
+                    var ObjToSend = {
+                        "action" : inputAction,
+                        "id" : slots.ElemID ? slots.ElemID.value : ''
+                        }
                     break;
                 case 'edit':
                     break;
@@ -48,47 +95,6 @@ var handlers = {
             inputAction = "App launched";
         }
 
-        // Create speech output
-        if (inputChildElement != '' && slots.Amount.value){
-            var ObjToSend = {
-                "parent" : { "element": inputElement,
-                "width": 500,
-                "height": 300,
-                "bg": "red",
-                "id": "testID" },
-                "Child" : {
-                    "Amount" : slots.Amount.value,
-                    "element" : {
-                        "element": inputChildElement,
-                        "width": 500,
-                        "height": 300,
-                        "bg": "red",
-                        "id": "testID"
-                    }
-                }
-            }
-            //inputAction + " with a " + inputElement + " with "
-            //+ slots.Amount.value + " " + inputChildElement;
-        }else{
-            var height = slots.Height ? slots.Height.value : '';
-            var width = slots.Width ? slots.Width.value : '';
-            var ID = slots.ElemID ? slots.ElemID.value : '';
-            var bgColour = '';
-            var content = slots.Text ? slots.Text.value : '';
-            inputElement == 'div' ? bgColour = "yellow" : '';
-
-            var ObjToSend = {
-                "action" : inputAction,
-                "element": inputElement,
-                "width": width,
-                "height": height,
-                "bg": bgColour,
-                "id": ID,
-                "content" : content
-            }
-        }
-
-
         request({
             url: 'https://lazywebdev.herokuapp.com/data',
             method: 'POST',
@@ -96,7 +102,8 @@ var handlers = {
             json: true
         }, (err, res, body) => {
             console.log('Error', body);
-            this.emit(':tellWithCard', "hello");
+            var pharse = Math.floor((Math.random() * output.length))
+            this.emit(':tellWithCard', output[pharse]);
         });
     },
     'AMAZON.HelpIntent': function () {
