@@ -4,7 +4,27 @@
         <style>
             * {
                 font-family: sans-serif;
+                margin: 0px;
             }
+            .container, .sidebar, .content {
+                height: 99vh;
+            }
+            .container {
+                width: 100%;
+            }
+            .sidebar {
+                width: 20%;
+                padding-top: 40px;
+                background-color: #eee;
+            }
+            .content {
+                width: 79%;
+            }
+
+            td {
+                vertical-align: top;
+            }
+
         </style>
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
@@ -28,6 +48,8 @@
                 return element;
             }
 
+            const DEST = '.content';
+
             socket.on('message', (data) => {
                 console.log(data);
 
@@ -36,7 +58,7 @@
                         if(data.parent && data.children){
                             let parent = createElement(data.parent),
                                 child;
-                            $('body').append(parent);
+                            $(DEST).append(parent);
                             //parent.text(data.parent.content || new Date().getTime());
 
                             for(let i = 0; i < data.children.amount; i++){
@@ -47,7 +69,7 @@
                         }
                         else {
                             let element = createElement(data);
-                            $('body').append(element);     
+                            $(DEST).append(element);     
                             element.text(data.content);
                         }
                         break;
@@ -65,9 +87,25 @@
                         break;
                     }
                 }
+                
+                let arrID = $.map($(DEST).children(), (elem) => {
+                    return elem.getAttribute('id');
+                });
+                $('.sidebar').empty();
+                let list = $('<ul>');
+                arrID.forEach((id) => {
+                    list.append($(`<li>${id}</li>`));
+                });
+                $('.sidebar').append(list);
             });
         </script>
     </head>
     <body>
+        <table class="container">
+            <tr>
+                <td class="sidebar"></td>
+                <td class="content"></td>
+            </tr>
+        </table>
     </body>
 </html>
