@@ -80,7 +80,7 @@ app.post('/data', (req, res) => {
                 message.parent = processElement(body.parent, DEFAULT);
                 message.children = {};
                 message.children.child = processElement(body.children.child, DEFAULT);
-                message.children.ID = randomWord(body.children.amount);
+                message.children.ID = randomWord(parseInt(body.children.amount));
             }
             else {
                 message = processElement(body, DEFAULT);
