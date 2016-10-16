@@ -1,6 +1,7 @@
 'use strict';
 
-const app = require('express')(),
+const express = require('express'), 
+    app = express(),
     server = require('http').Server(app),
     io = require('socket.io')(server),
     bodyParser = require('body-parser'),
@@ -15,6 +16,7 @@ server.listen(PORT, () => {
 });
 
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 // Ignore favicon
 app.get('/favicon.ico', (req, res) => {
@@ -76,12 +78,14 @@ app.post('/data', (req, res) => {
 
     switch(action){
         case 'create': {
+            // Nested elements
             if(body.parent && body.children){
                 message.parent = processElement(body.parent, DEFAULT);
                 message.children = {};
                 message.children.child = processElement(body.children.child, DEFAULT);
                 message.children.ID = randomWord(parseInt(body.children.amount));
             }
+            // Default single element
             else {
                 message = processElement(body, DEFAULT);
             }
@@ -100,6 +104,10 @@ app.post('/data', (req, res) => {
             message = {
                 id: body.id
             };
+            break;
+        }
+        case 'bootstrap': {
+            message = body;
             break;
         }
     }
