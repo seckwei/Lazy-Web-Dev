@@ -43,6 +43,17 @@
             function createElement(data){
                 let element = $(`<${data.element}>`);
                 element.attr('id', (data.id));
+                switch (data.element) {
+                    case 'ol':
+                    case 'ul': {
+                        element.addClass('list-group');
+                        break;
+                    }
+                    case 'li': {
+                        element.addClass('list-group-item');
+                        break;
+                    }
+                }
                 element.css({
                     'width': data.width,
                     'height': data.height,
@@ -76,7 +87,7 @@
             function generateSelectorList(arr){
                 let ul = $('<ul>'),
                     li = () => $('<li>');
-
+                        
                 let listItem;
                 arr.forEach((item) => {
                     listItem = li();
